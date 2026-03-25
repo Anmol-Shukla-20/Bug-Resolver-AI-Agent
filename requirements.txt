@@ -1,5 +1,6 @@
 flask
 flask-login
+flask_sqlalchemy
 groq
 python-dotenv
 gunicorn
