@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Bug Resolver AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-dark: rgba(30, 41, 59, 0.7);
+            --text-dark: #f8fafc;
+            --accent: #3b82f6;
+            --gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+        }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-dark); color: var(--text-dark); min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .blob { position: absolute; width: 400px; height: 400px; background: var(--gradient); border-radius: 50%; filter: blur(100px); opacity: 0.2; z-index: -1; animation: pulse 6s infinite alternate; }
+        @keyframes pulse { from { transform: scale(1); opacity: 0.1; } to { transform: scale(1.1); opacity: 0.3; } }
+        .auth-card { background: var(--card-dark); padding: 3rem; border-radius: 24px; width: 100%; max-width: 400px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.08); text-align: center; }
+        .auth-card h1 { margin-top: 0; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .input-group { margin-bottom: 1.5rem; text-align: left; }
+        .input-group label { display: block; margin-bottom: 0.5rem; color: #94a3b8; font-size: 0.9rem; }
+        .input-group input { width: 100%; padding: 0.8rem 1rem; border-radius: 12px; background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.1); color: white; font-family: inherit; box-sizing: border-box; outline: none; transition: border-color 0.2s; }
+        .input-group input:focus { border-color: var(--accent); }
+        .btn { width: 100%; padding: 0.9rem; border-radius: 12px; background: var(--gradient); color: white; border: none; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59,130,246,0.4); }
+        .error { color: #ef4444; background: rgba(239,68,68,0.1); padding: 0.75rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.9rem; }
+        .links { margin-top: 1.5rem; font-size: 0.9rem; color: #94a3b8; }
+        .links a { color: #60a5fa; text-decoration: none; }
+        .links a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="blob"></div>
+    <div class="auth-card">
+        <h1>Welcome Back</h1>
+        <p style="color:#94a3b8; margin-bottom: 2rem;">Sign in to continue to Bug Resolver AI Agent.</p>
+        
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <form method="post" action="/login">
+            <div class="input-group">
+                <label>Email or Username</label>
+                <input type="text" name="login_id" required placeholder="Enter your email or username">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" name="password" required placeholder="••••••••">
+            </div>
+            <button type="submit" class="btn">Login</button>
+        </form>
+        
+        <div class="links">
+            Don't have an account? <a href="/signup">Sign up</a>
+        </div>
+    </div>
+</body>
+</html>

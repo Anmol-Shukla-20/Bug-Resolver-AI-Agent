@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug Resolver - Developer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-dark: rgba(30, 41, 59, 0.7);
+            --text-dark: #f8fafc;
+            --gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-dark); color: var(--text-dark); min-height: 100vh; }
+        .navbar { width: 100%; position: fixed; top: 0; display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.05); z-index:1000; }
+        .navbar b { font-size: 1.25rem; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links a { margin-left: 1.5rem; color: var(--text-dark); text-decoration: none; font-weight: 500; opacity:0.8; }
+        .nav-links a:hover { opacity:1; }
+        .content { max-width: 900px; margin: 8rem auto 2rem; background: var(--card-dark); border-radius: 20px; padding: 2.5rem; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 40px rgba(0,0,0,.2); }
+        h1 { margin-top: 0; }
+        .stat { margin-bottom: 1rem; }
+        .stat strong { color: #a855f7; }
+        .actions { margin-top: 2rem; }
+        .actions a { display:inline-block; margin-right:.75rem; background:var(--gradient); color:#fff; padding:.7rem 1rem; border-radius:8px; text-decoration:none; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div><b>🤖 Bug Resolver AI</b></div>
+        <div class="nav-links">
+            <a href="/">Dashboard</a>
+            <a href="/profile">Profile</a>
+            <a href="/settings">Settings</a>
+            <a href="/developer" style="opacity:1;">Developer</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+
+    <main class="content">
+        <h1>Developer Info</h1>
+        <p>Welcome to the developer details page for the <strong>Bug Resolver AI</strong> project. This project is part of the <strong>AI GitLab Hackathon</strong>.</p>
+
+        <div class="stat"><strong>Project:</strong> Bug Resolver AI Agent</div>
+        <div class="stat"><strong>Developer:</strong> Anmol Shukla</div>
+        <div class="stat"><strong>Hackathon:</strong> AI GitLab Hackathon</div>
+        <div class="stat"><strong>Technology stack:</strong> Flask, SQLAlchemy, LocalStorage-based frontend settings + AI code-fix generator modules.</div>
+        <div class="stat"><strong>Key features:</strong> issue parsing, automatic fix generation, test generation, multi-tab settings panel, theme/persistence settings, profile updates.</div>
+
+        <h2>How to use settings</h2>
+        <ol>
+            <li>Open <a href="/settings">Settings</a>.</li>
+            <li>Switch tab and update toggles/values.</li>
+            <li>Click <strong>Save Changes</strong> - data is persisted in localStorage.</li>
+            <li>Refresh page - your active tab and settings remain active.</li>
+            <li>Navigate to <a href="/profile">Profile</a> to verify display name and email updates.</li>
+        </ol>
+
+        <div class="actions">
+            <a href="/settings">Open Settings</a>
+            <a href="/profile">Open Profile</a>
+        </div>
+    </main>
+</body>
+</html>

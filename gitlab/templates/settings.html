@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug Resolver - Settings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-dark: rgba(30, 41, 59, 0.6);
+            --text-dark: #f8fafc;
+            --accent: #8b5cf6;
+            --accent-glow: rgba(139, 92, 246, 0.4);
+            --gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 80% 10%, rgba(99, 102, 241, 0.15), transparent 30%),
+                radial-gradient(circle at 20% 80%, rgba(168, 85, 247, 0.15), transparent 30%);
+        }
+
+        .navbar {
+            width: 100%;
+            position: fixed;
+            top: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        .navbar b {
+            font-size: 1.25rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links a {
+            margin-left: 1.5rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            opacity: 0.8;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+            opacity: 1;
+        }
+
+        .settings-layout {
+            display: flex;
+            gap: 2rem;
+            max-width: 1000px;
+            width: 100%;
+            padding: 2rem;
+            margin-top: 6rem;
+            box-sizing: border-box;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .sidebar {
+            width: 250px;
+            flex-shrink: 0;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            background: var(--card-dark);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 0.875rem 1.25rem;
+            color: #94a3b8;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+        
+        .sidebar-menu a.active {
+            background: rgba(99, 102, 241, 0.15);
+            color: #a855f7;
+            position: relative;
+        }
+
+        .sidebar-menu a.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 60%;
+            width: 4px;
+            background: var(--gradient);
+            border-radius: 0 4px 4px 0;
+        }
+
+        .settings-header {
+            margin-bottom: 2rem;
+        }
+
+        .settings-header h1 {
+            margin: 0 0 0.5rem 0;
+            font-size: 2rem;
+            letter-spacing: -0.5px;
+        }
+
+        .settings-header p {
+            margin: 0;
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-info h3 {
+            margin: 0 0 0.25rem 0;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .setting-info p {
+            margin: 0;
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+
+        .switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .4s;
+            border-radius: 34px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: #94a3b8;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background: var(--gradient);
+            border-color: transparent;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+            background-color: white;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+
+        /* Select / Input styling */
+        .premium-select, .premium-input {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+            width: 200px;
+        }
+
+        .premium-select:focus, .premium-input:focus {
+            border-color: var(--accent);
+        }
+
+        .btn-save {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 0.875rem 2rem;
+            border-radius: 12px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            margin-top: 2rem;
+            float: right;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5);
+        }
+
+        .no-animations *,
+        .no-animations *::before,
+        .no-animations *::after {
+            transition: none !important;
+            animation: none !important;
+        }
+
+        .decorative-blob {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: var(--gradient);
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.1;
+            bottom: -50px;
+            right: -50px;
+            pointer-events: none;
+        }
+        
+        @media (max-width: 768px) {
+            .settings-layout {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div><b>🤖 Bug Resolver AI</b></div>
+        <div class="nav-links">
+            <a href="/">Dashboard</a>
+            <a href="/profile">Profile</a>
+            <a href="/settings" style="color: #fff; opacity: 1;">Settings</a>
+            <a href="/developer">Developer</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="settings-layout">
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active">Appearance</a></li>
+                <li><a href="#">Account Details</a></li>
+                <li><a href="#">Notifications</a></li>
+                <li><a href="#">Security & Privacy</a></li>
+                <li><a href="#">Integrations</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="decorative-blob"></div>
+            
+            <div class="settings-header">
+                <h1>Appearance Settings</h1>
+                <p>Customize how Bug Resolver AI looks and feels on your device.</p>
+            </div>
+
+            <div id="tabContents">
+                <div class="settings-list settings-panel active" data-section="Appearance">
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h3>Dark Mode</h3>
+                            <p>Enjoy a dark, sleek interface that is easy on the eyes.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="darkModeToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h3>Animation Effects</h3>
+                            <p>Enable smooth transitions and glassmorphism visual effects.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="animationToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h3>Accent Color</h3>
+                            <p>Choose your primary UI color highlight.</p>
+                        </div>
+                        <select class="premium-select" id="accentColorSelect">
+                            <option value="violet">Mystic Violet</option>
+                            <option value="blue">Ocean Blue</option>
+                            <option value="emerald">Emerald Green</option>
+                            <option value="rose">Rose Gold</option>
+                        </select>
+                    </div>
+
+                    <button class="btn-save" onclick="saveSettings()">Save Changes</button>
+                </div>
+
+                <div class="settings-list settings-panel" data-section="Account Details" style="display:none;">
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h3>Display Name</h3>
+                            <p>How your name appears in the profile page.</p>
+                        </div>
+                        <input id="displayNameInput" class="premium-input" type="text" placeholder="Enter display name">
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h3>Email</h3>
+                            <p>Your account email address.</p>
+                        </div>
+                        <input id="emailInput" class="premium-input" type="email" placeholder="Enter email">
+                    </div>
+
+                    <button class="btn-save" onclick="saveSettings()">Save Changes</button>
+                </div>
+
+                <div class="settings-list settings-panel" data-section="Notifications" style="display:none;">
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h3>Enable Email Notifications</h3>
+                            <p>Receive important updates by email.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="notificationsEmail">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h3>Enable Push Notifications</h3>
+                            <p>Get real-time alerts on your device.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="notificationsPush">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <button class="btn-save" onclick="saveSettings()">Save Changes</button>
+                </div>
+
+                <div class="settings-list settings-panel" data-section="Security & Privacy" style="display:none;">
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h3>Two factor authentication</h3>
+                            <p>A second verification step for sign-in.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="security2fa">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h3>Data sharing</h3>
+                            <p>Allow bug reports that help engineers improve the product.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="securityData">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <button class="btn-save" onclick="saveSettings()">Save Changes</button>
+                </div>
+
+                <div class="settings-list settings-panel" data-section="Integrations" style="display:none;">
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h3>GitHub Integration</h3>
+                            <p>Enable one-click sync with GitHub.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="integrationGithub">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h3>Slack Integration</h3>
+                            <p>Receive alerts in Slack channels.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="integrationSlack">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <button class="btn-save" onclick="saveSettings()">Save Changes</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const SETTINGS_KEY = 'bugResolverUiSettings';
+        const ACTIVE_TAB_KEY = 'bugResolverActiveTab';
+
+        const accentThemes = {
+            violet: {accent: '#8b5cf6', accentGlow: 'rgba(139, 92, 246, 0.4)', gradient: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)'},
+            blue: {accent: '#3b82f6', accentGlow: 'rgba(59, 130, 246, 0.5)', gradient: 'linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)'},
+            emerald: {accent: '#10b981', accentGlow: 'rgba(16, 185, 129, 0.45)', gradient: 'linear-gradient(135deg, #059669 0%, #10b981 100%)'},
+            rose: {accent: '#ec4899', accentGlow: 'rgba(236, 72, 153, 0.45)', gradient: 'linear-gradient(135deg, #fb7185 0%, #f43f5e 100%)'}
+        };
+
+        function getSavedSettings() {
+            const saved = localStorage.getItem(SETTINGS_KEY);
+            if (!saved) return {
+                darkMode: true,
+                animationEffects: true,
+                accentColor: 'violet',
+                displayName: 'Anmol Shukla',
+                email: 'admin@bugresolver.ai'
+            };
+            try {
+                return {...{darkMode: true, animationEffects: true, accentColor: 'violet', displayName:'Anmol Shukla', email:'admin@bugresolver.ai'}, ...JSON.parse(saved)};
+            } catch (err) {
+                console.warn('Failed to parse settings', err);
+                localStorage.removeItem(SETTINGS_KEY);
+                return {darkMode: true, animationEffects: true, accentColor: 'violet', displayName:'Anmol Shukla', email:'admin@bugresolver.ai'};
+            }
+        }
+
+        function applyTheme(settings) {
+            const root = document.documentElement.style;
+            const theme = settings.darkMode ? {
+                bgDark: '#0f172a',
+                cardDark: 'rgba(30, 41, 59, 0.6)',
+                textDark: '#f8fafc'
+            } : {
+                bgDark: '#f8fafc',
+                cardDark: 'rgba(255, 255, 255, 0.9)',
+                textDark: '#1f2937'
+            };
+
+            root.setProperty('--bg-dark', theme.bgDark);
+            root.setProperty('--card-dark', theme.cardDark);
+            root.setProperty('--text-dark', theme.textDark);
+
+            const accent = accentThemes[settings.accentColor] || accentThemes.violet;
+            root.setProperty('--accent', accent.accent);
+            root.setProperty('--accent-glow', accent.accentGlow);
+            root.setProperty('--gradient', accent.gradient);
+
+            if (settings.animationEffects) {
+                document.body.classList.remove('no-animations');
+            } else {
+                document.body.classList.add('no-animations');
+            }
+        }
+
+        function safeCheckbox(id, fallback = false) {
+            const el = document.getElementById(id);
+            return el ? el.checked : fallback;
+        }
+
+        function safeInputValue(id, fallback = '') {
+            const el = document.getElementById(id);
+            return el ? el.value.trim() : fallback;
+        }
+
+        function updateControls(settings) {
+            const darkEl = document.getElementById('darkModeToggle');
+            if (darkEl) darkEl.checked = settings.darkMode;
+
+            const animEl = document.getElementById('animationToggle');
+            if (animEl) animEl.checked = settings.animationEffects;
+
+            const accentEl = document.getElementById('accentColorSelect');
+            if (accentEl) accentEl.value = settings.accentColor;
+
+            const nameEl = document.getElementById('displayNameInput');
+            if (nameEl) nameEl.value = settings.displayName || '';
+
+            const emailEl = document.getElementById('emailInput');
+            if (emailEl) emailEl.value = settings.email || '';
+
+            const emailNotif = document.getElementById('notificationsEmail');
+            if (emailNotif) emailNotif.checked = settings.notificationsEmail;
+
+            const pushNotif = document.getElementById('notificationsPush');
+            if (pushNotif) pushNotif.checked = settings.notificationsPush;
+
+            const security2fa = document.getElementById('security2fa');
+            if (security2fa) security2fa.checked = settings.security2fa;
+
+            const securityData = document.getElementById('securityData');
+            if (securityData) securityData.checked = settings.securityData;
+
+            const gitHubInt = document.getElementById('integrationGithub');
+            if (gitHubInt) gitHubInt.checked = settings.integrationGithub;
+
+            const slackInt = document.getElementById('integrationSlack');
+            if (slackInt) slackInt.checked = settings.integrationSlack;
+        }
+
+        function showToast(message, timeout = 1800) {
+            let toast = document.getElementById('settingsToast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'settingsToast';
+                toast.style.position = 'fixed';
+                toast.style.right = '20px';
+                toast.style.bottom = '20px';
+                toast.style.padding = '12px 18px';
+                toast.style.backgroundColor = 'rgba(15, 23, 42, 0.95)';
+                toast.style.color = '#fff';
+                toast.style.border = '1px solid rgba(139, 92, 246, 0.5)';
+                toast.style.borderRadius = '9px';
+                toast.style.boxShadow = '0 4px 20px rgba(0,0,0,0.3)';
+                toast.style.zIndex = '2000';
+                toast.style.fontFamily = 'Inter, sans-serif';
+                document.body.appendChild(toast);
+            }
+            toast.textContent = message;
+            toast.style.opacity = '1';
+            setTimeout(() => {
+                toast.style.transition = 'opacity 0.3s ease';
+                toast.style.opacity = '0';
+            }, timeout);
+        }
+
+        function saveSettings() {
+            console.log('[Settings] saveSettings triggered');
+            const oldSettings = getSavedSettings();
+
+            const settings = {
+                darkMode: safeCheckbox('darkModeToggle', oldSettings.darkMode),
+                animationEffects: safeCheckbox('animationToggle', oldSettings.animationEffects),
+                accentColor: safeInputValue('accentColorSelect', oldSettings.accentColor || 'violet'),
+                displayName: safeInputValue('displayNameInput', oldSettings.displayName || 'Anmol Shukla') || 'Anmol Shukla',
+                email: safeInputValue('emailInput', oldSettings.email || 'admin@bugresolver.ai') || 'admin@bugresolver.ai',
+                notificationsEmail: safeCheckbox('notificationsEmail', oldSettings.notificationsEmail),
+                notificationsPush: safeCheckbox('notificationsPush', oldSettings.notificationsPush),
+                security2fa: safeCheckbox('security2fa', oldSettings.security2fa),
+                securityData: safeCheckbox('securityData', oldSettings.securityData),
+                integrationGithub: safeCheckbox('integrationGithub', oldSettings.integrationGithub),
+                integrationSlack: safeCheckbox('integrationSlack', oldSettings.integrationSlack)
+            };
+
+            try {
+                localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+                applyTheme(settings);
+                updateControls(settings);
+                reflectProfileSettings(settings);
+                showToast('Settings saved successfully.');
+            } catch (error) {
+                console.error('[Settings] save error:', error);
+                showToast('Unable to save settings. Check browser storage permission.');
+            }
+
+            const btn = document.querySelector('.btn-save');
+            if (btn) {
+                const originalText = btn.innerText;
+                btn.innerText = 'Saved!';
+                btn.style.background = '#10b981';
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.background = 'var(--gradient)';
+                }, 1800);
+            }
+        }
+
+        function reflectProfileSettings(settings) {
+            if (window.parent && window.parent.document) {
+                // cross-window if embedded (not used) - ignored
+            }
+            // in case profile page is open in same window, values in localStorage are enough.
+        }
+
+        function initSettingsPage() {
+            const settings = getSavedSettings();
+            updateControls(settings);
+            applyTheme(settings);
+
+            document.getElementById('darkModeToggle').addEventListener('change', () => {
+                const state = getSavedSettings();
+                state.darkMode = document.getElementById('darkModeToggle').checked;
+                applyTheme(state);
+            });
+
+            document.getElementById('animationToggle').addEventListener('change', () => {
+                const state = getSavedSettings();
+                state.animationEffects = document.getElementById('animationToggle').checked;
+                applyTheme(state);
+            });
+
+            document.getElementById('accentColorSelect').addEventListener('change', () => {
+                const state = getSavedSettings();
+                state.accentColor = document.getElementById('accentColorSelect').value;
+                applyTheme(state);
+            });
+
+            const tabs = document.querySelectorAll('.sidebar-menu a');
+            const sections = {
+                Appearance: 'Appearance Settings',
+                'Account Details': 'Account Details',
+                Notifications: 'Notifications',
+                'Security & Privacy': 'Security & Privacy',
+                Integrations: 'Integrations'
+            };
+
+            function setActiveSection(name) {
+                const panels = document.querySelectorAll('.settings-panel');
+                panels.forEach(p => {
+                    p.style.display = (p.dataset.section === name) ? 'block' : 'none';
+                });
+
+                const heading = sections[name] || 'Settings';
+                document.querySelector('.settings-header h1').textContent = heading;
+                document.querySelector('.settings-header p').textContent = `Customize how Bug Resolver AI ${name.toLowerCase()} looks and works.`;
+
+                localStorage.setItem(ACTIVE_TAB_KEY, name);
+            }
+
+            function loadActiveSection() {
+                const stored = localStorage.getItem(ACTIVE_TAB_KEY);
+                return stored || 'Appearance';
+            }
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    const title = this.textContent.trim();
+                    setActiveSection(title);
+                });
+            });
+
+            // initial section load
+            setActiveSection(loadActiveSection());
+        }
+
+        // init
+        initSettingsPage();
+    </script>
+</body>
+</html>
+</body>
+</html>
