@@ -1,6 +1,4 @@
-# ai-bug-fix-agent
-
-
+# AI-bug-fix-agent
 
 ## Getting started
 
