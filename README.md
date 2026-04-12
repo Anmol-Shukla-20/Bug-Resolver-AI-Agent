@@ -22,7 +22,7 @@ git push -uf origin main
 
 * [Set up project integrations](https://gitlab.com/Anmol_Git_Code_Geek_21/ai-bug-fix-agent/-/settings/integrations)
 
-## Collaborate with your team
+## Collaborate with team members
 
 * [Invite team members and collaborators](https://docs.gitlab.com/user/project/members/)
 * [Create a new merge request](https://docs.gitlab.com/user/project/merge_requests/creating_merge_requests/)
