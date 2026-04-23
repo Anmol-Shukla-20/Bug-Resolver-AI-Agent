@@ -149,33 +149,6 @@ Example minimal payload:
 	}
 }
 ```
-
-## Current behavior and limitations
-
-This is a hackathon-style prototype. Keep these points in mind:
-
-- Passwords are currently stored in plain text (not production-safe).
-- Prompt logic in generators is currently specialized for a specific function format (`function(x)` and absolute-value-style behavior), so outputs may not generalize for all bug types.
-- There are no automated tests in the `tests/` directory yet.
-- Error handling around external API failures can be improved.
-- The webhook currently returns processing status but does not create merge requests or commit changes.
-
-## Demo assets
-
-Project visuals are available in `Project_Outcome/` (screenshots and video).
-
-## Future improvements
-
-- Add password hashing and stronger auth/session protections.
-- Generalize prompt templates for broader bug classes.
-- Add automated test suite and CI checks.
-- Add retry/fallback handling for API timeouts.
-- Integrate generated fixes with repository automation (MR creation, comments, patch suggestions).
-
 ## Author
 
-- Anmol Shukla (as referenced in the developer page)
-
-## License
-
-No explicit license file is currently included in this repository.
+- Anmol Shukla 
