@@ -1,91 +1,181 @@
-# AI-bug-fix-agent
+# Bug Resolver AI Agent
 
-## Getting started
+Bug Resolver AI Agent is a Flask-based application that helps developers go from bug report to actionable output faster. It accepts an issue description, generates a suggested Python fix, and generates unit tests for that fix using an LLM (Groq API).
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+The project includes:
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+- A web app with authentication and bug history.
+- A simple CLI runner for quick local experimentation.
+- A GitLab-style webhook endpoint for automated issue processing.
 
-## Add your files
+## Why this project matters
 
-* [Create](https://docs.gitlab.com/user/project/repository/web_editor/#create-a-file) or [upload](https://docs.gitlab.com/user/project/repository/web_editor/#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+Debugging is not only about finding the error, it is also about writing reliable fixes and validating them quickly. This project is useful because it:
 
+- Reduces turnaround time from bug report to first draft fix.
+- Encourages test-first validation by always generating test cases.
+- Keeps a per-user history of issues and generated outputs for traceability.
+- Can be integrated into issue workflows through a webhook endpoint.
+
+## Features
+
+- User signup/login/logout.
+- Dashboard to submit bug reports and view generated results.
+- AI-generated Python fix suggestions.
+- AI-generated unit test suggestions (`unittest` style).
+- Saved chat/history entries in SQLite.
+- Routes for profile/settings/developer pages.
+- `/webhook` endpoint to process issue payloads.
+
+## Project structure
+
+```text
+.
+|- main.py                        # CLI entry point
+|- database.py                    # SQLAlchemy models and DB setup
+|- requirements.txt               # Python dependencies
+|- agent/
+|  |- issue_parser.py             # Converts raw issue text to structured input
+|  |- fix_generator.py            # Calls Groq model to generate fix code
+|  |- test_generator.py           # Calls Groq model to generate tests
+|- gitlab/
+|  |- webhook_listener.py         # Main Flask app and routes
+|  |- templates/                  # Jinja HTML templates used by Flask
+|- Project_Outcome/               # Demo screenshots/video assets
+|- tests/                         # Test folder (currently empty)
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/Anmol_Git_Code_Geek_21/ai-bug-fix-agent.git
-git branch -M main
-git push -uf origin main
+
+## Tech stack
+
+- Python
+- Flask
+- Flask-Login
+- Flask-SQLAlchemy
+- SQLite
+- Groq API (LLM inference)
+
+## Prerequisites
+
+- Python 3.10+
+- A Groq API key
+
+## Setup
+
+1. Clone the repository and go to the project root.
+2. Create and activate a virtual environment.
+3. Install dependencies.
+4. Create a `.env` file.
+
+### Windows (PowerShell)
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
 ```
 
-## Integrate with your tools
+### Linux/macOS
 
-* [Set up project integrations](https://gitlab.com/Anmol_Git_Code_Geek_21/ai-bug-fix-agent/-/settings/integrations)
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
 
-## Collaborate with team members
+### Environment variables
 
-* [Invite team members and collaborators](https://docs.gitlab.com/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/user/project/merge_requests/creating_merge_requests/)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/user/project/issues/managing_issues/#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+Create `.env` in the project root:
 
-## Test and Deploy
+```env
+GROQ_API_KEY=your_groq_api_key_here
+SECRET_KEY=your_flask_secret_here
+```
 
-Use the built-in continuous integration in GitLab.
+Notes:
 
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/topics/autodevops/requirements/)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ci/environments/protected_environments/)
+- `GROQ_API_KEY` is required for fix/test generation.
+- `SECRET_KEY` is recommended; if not provided, the app uses a fallback development secret.
 
-***
+## Run the application
 
-# Editing this README
+### Option 1: Run the web app (recommended)
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+```bash
+python gitlab/webhook_listener.py
+```
 
-## Suggestions for a good README
+Then open:
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+- `http://127.0.0.1:5000/login`
 
-## Name
-Choose a self-explaining name for your project.
+On first run, SQLite tables are created automatically.
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+### Option 2: Run the CLI agent
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+```bash
+python main.py
+```
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+You will be prompted to enter an issue text. The CLI prints:
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+- Generated fix suggestion
+- Generated unit tests
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+## How to use (web flow)
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+1. Sign up a new account.
+2. Log in.
+3. On the dashboard, paste or write a bug description.
+4. Click `Generate Fix & Tests`.
+5. Review generated code and tests.
+6. Open previous chats from the left sidebar.
+7. Delete old chats if needed.
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+## Webhook usage
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+The app exposes `POST /webhook` to process issue events.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+- Expected: payload containing `object_kind == "issue"` and `object_attributes` with `title` and `description`.
+- Behavior: generates fix/tests internally and returns JSON status.
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+Example minimal payload:
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+```json
+{
+	"object_kind": "issue",
+	"object_attributes": {
+		"title": "Function returns wrong value",
+		"description": "For negative input, result should be absolute value"
+	}
+}
+```
+
+## Current behavior and limitations
+
+This is a hackathon-style prototype. Keep these points in mind:
+
+- Passwords are currently stored in plain text (not production-safe).
+- Prompt logic in generators is currently specialized for a specific function format (`function(x)` and absolute-value-style behavior), so outputs may not generalize for all bug types.
+- There are no automated tests in the `tests/` directory yet.
+- Error handling around external API failures can be improved.
+- The webhook currently returns processing status but does not create merge requests or commit changes.
+
+## Demo assets
+
+Project visuals are available in `Project_Outcome/` (screenshots and video).
+
+## Future improvements
+
+- Add password hashing and stronger auth/session protections.
+- Generalize prompt templates for broader bug classes.
+- Add automated test suite and CI checks.
+- Add retry/fallback handling for API timeouts.
+- Integrate generated fixes with repository automation (MR creation, comments, patch suggestions).
+
+## Author
+
+- Anmol Shukla (as referenced in the developer page)
 
 ## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+No explicit license file is currently included in this repository.
